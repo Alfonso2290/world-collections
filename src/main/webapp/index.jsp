@@ -7,6 +7,7 @@
             const user = document.getElementById("user").value;
             const password = document.getElementById("password").value;
 
+            //Apunta al NodePort: 30080 (world-control-collection --> Service -> nodePort: 30080)
             const response = await fetch(`http://localhost:30080/user/validate/user?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, {
                 method: "GET"
             });
