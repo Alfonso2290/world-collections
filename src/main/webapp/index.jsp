@@ -7,7 +7,7 @@
             const user = document.getElementById("user").value;
             const password = document.getElementById("password").value;
 
-            const response = await fetch(`http://localhost:8082/user/validate/user?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, {
+            const response = await fetch(`http://localhost:30080/user/validate/user?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, {
                 method: "GET"
             });
 
