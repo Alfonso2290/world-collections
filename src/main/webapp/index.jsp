@@ -7,6 +7,14 @@
             const user = document.getElementById("user").value;
             const password = document.getElementById("password").value;
 
+            if(user.length===0) {
+                alert("Ingrese username");
+                return;
+            }else if(password.length===0){
+                alert("Ingrese password");
+                return;
+            }
+
             //Apunta al NodePort: 30080 (world-control-collection --> Service -> nodePort: 30080)
             const response = await fetch(`http://localhost:30080/user/validate/user?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, {
                 method: "GET"
@@ -17,7 +25,7 @@
 
             if (result.status === '200') {
                 alert("Login exitoso: " + JSON.stringify(result));
-                window.location.href = "home.js";
+                window.location.href = "home.jsp";
             } else {
                 alert("Error: " + JSON.stringify(result));
             }
