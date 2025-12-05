@@ -87,7 +87,7 @@
 
             index++;
 
-            // RETORNAMOS valores actualizados
+            // Retorna valores actualizados
             return { index, row };
         }
 
