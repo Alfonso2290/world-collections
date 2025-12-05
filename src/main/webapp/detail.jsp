@@ -95,14 +95,16 @@
             const tbody = document.getElementById("legend-body");
             tbody.innerHTML = ""; // limpiar tabla
 
-            const row = document.createElement("tr");
-            const tdTitle = document.createElement("td");
-            tdTitle.textContent='Leyenda';
-            tdTitle.setAttribute("colspan", "2");
-            tdTitle.style.fontWeight = "bold";
-            tdTitle.style.textAlign = "center";
-            row.appendChild(tdTitle);
-            tbody.appendChild(row);
+            if(ArrayStatus.length>0) {
+                const row = document.createElement("tr");
+                const tdTitle = document.createElement("td");
+                tdTitle.textContent = 'Leyenda';
+                tdTitle.setAttribute("colspan", "2");
+                tdTitle.style.fontWeight = "bold";
+                tdTitle.style.textAlign = "center";
+                row.appendChild(tdTitle);
+                tbody.appendChild(row);
+            }
 
             ArrayStatus.forEach(item => {
                 const row = document.createElement("tr");
