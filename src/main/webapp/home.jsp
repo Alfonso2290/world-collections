@@ -40,6 +40,10 @@
                 tbody.appendChild(row);
             });
         }
+
+        function formRegisterCollections(){
+            window.location.href = "register.jsp";
+        }
         window.onload = formListCollectionsFilterName; // ejecutar al cargar
     </script>
 </head>
@@ -49,6 +53,7 @@
         Nombre: <input type="search" name="filterNameCollection" id="filterNameCollection"/>
         Editorial: <input type="search" name="filterEditorialCollection" id="filterEditorialCollection"/>
         <button type="button" onclick="formListCollectionsFilterName(event)">Buscar</button>
+        <button type="button" onclick="formRegisterCollections()">Nuevo</button>
         <br><br>
         <table border="2">
             <thead>
