@@ -102,7 +102,7 @@
                             <option>Completo</option>
                             <option>Incompleto</option>
                             <option>Solo mejora</option>
-                            <option>Pendiente abrir</option>
+                            <option>Pendiente apertura</option>
                         </select>
                     </td>
                 </tr>
