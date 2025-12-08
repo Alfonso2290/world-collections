@@ -35,6 +35,7 @@
                     <td>${item.destiny}</td>
                     <td>${item.form}</td>
                     <td>${item.binder}</td>
+                    <td><input type="button" value="Modificar" onclick="registerControlCollection(${item.id})"/></td>
                 `;
 
                 tbody.appendChild(row);
@@ -43,6 +44,10 @@
 
         function formRegisterCollections(){
             window.location.href = "register.jsp";
+        }
+
+        function registerControlCollection(id){
+            window.location.href = "register-control.jsp?id=" + id;
         }
         window.onload = formListCollectionsFilterName; // ejecutar al cargar
     </script>
@@ -67,6 +72,7 @@
                     <td>Destiny</td>
                     <td>Form</td>
                     <td>Binder</td>
+                    <td>Modificar</td>
                 </tr>
             </thead>
             <tbody id="collections-body">
