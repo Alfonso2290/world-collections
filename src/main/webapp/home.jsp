@@ -13,7 +13,7 @@
             }else if(editorial.length!==0){
                 url = `?editorial=${editorial}`;
             }
-            const response = await fetch(`http://localhost:8081/control/collections${url}`, {
+            const response = await fetch(`http://localhost:30080/control/collections${url}`, {
                 method: "GET"
             });
 
