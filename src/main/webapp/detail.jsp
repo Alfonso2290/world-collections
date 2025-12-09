@@ -11,7 +11,7 @@
             event.preventDefault();
             const id = document.getElementById("collectionId").value;
 
-            const response = await fetch(`http://localhost:8081/control/collections-detail?collectionId=${id}`, {
+            const response = await fetch(`http://localhost:30080/control/collections-detail?collectionId=${id}`, {
                 method: "GET"
             });
 
