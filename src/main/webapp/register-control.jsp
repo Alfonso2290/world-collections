@@ -4,11 +4,20 @@
 <html>
 <head>
     <script>
+
+        /**
+         * Pendiente:
+         * -> Falta listar cuando son letras
+         * -> Mapear los campos pendientes para hacer invocacion del backend y persistir en BD
+         * -> Invocar backend
+         * -> Realizar una tabla adicional para aquellas colecciones que tengan numeros especiales como: H1, H2, H3, etc --> Pendiente: Pintar celdas de ese tipo
+         * */
         let countFieldNewType = 1;
         let typeCollection = null;
         let arrayMapColor = new Map(); //Contiene {"12":"Rojo","14":"Rojo","23":"Azul"}
         let arrayFieldNewType = [];
         let arrayMapTypes = new Map(); //Contiene {"12":"Especial lluvia","14":"Especial lluvia","23":"Especial vidrio"}
+        let arrayFieldTableAdditional = []; //Contiene todos los numeros de la coleccion
 
         async function formListNumericCollections(event) {
             event.preventDefault();
@@ -25,24 +34,28 @@
                 }
                 /*for (let [key, value] of arrayMapTypes.entries()) {
                     alert("Fila " + key + ":" + value);
-                }
-                for (let [key, value] of arrayMapColor.entries()) {
+                }*/
+                /*for (let [key, value] of arrayMapColor.entries()) {
                     alert("Fila " + key + ":" + value);
                 }*/
-                addTable(numberSelected,arrayFieldNewType);
+                addTable();
             }else{
-                addTable(null,null);
+                addTable();
             }
 
         }
 
-        function addTable(numberSelected,arrayNumberSelected){
+        function addTable(){
             const countNumeric = parseInt(document.getElementById("txtCount").value);
             //alert(countNumeric);
             //const id = document.getElementById("collectionId").value;
 
             const tbody = document.getElementById("container-list-numbers-collection");
             tbody.innerHTML = "";
+
+            for(let i = 0; i < countNumeric; i++ ){
+                arrayFieldTableAdditional[i] = i + 1;
+            }
 
             let row = null;
             for (let i = 0; i < countNumeric; i++) {
@@ -51,7 +64,7 @@
                 }
                 const td = document.createElement("td");
                 td.textContent = i+1;
-                if(arrayNumberSelected!=null && arrayNumberSelected.includes(i+1)) {
+                if(arrayFieldNewType!=null && arrayFieldNewType.includes(i+1)) {
                     switch (arrayMapColor.get(i+1)){
                         case 'Rojo': td.style.backgroundColor = "rgb(245, 66, 39)";break;
                         case 'Azul': td.style.backgroundColor = "rgb(42, 39, 245)";break;
@@ -73,6 +86,101 @@
             if (row !== null) {
                 tbody.appendChild(row);
             }
+
+            addTableAdditional(event);
+
+        }
+
+        function addTableAdditional(event){
+            event.preventDefault();
+
+            let acronymTemp;
+            let initNumberAcronymTemp;
+            let endNumberAcronymTemp;
+            if(document.getElementById("txtAcronym")!=null && document.getElementById("txtInitNumberAcronym")!=null && document.getElementById("txtEndNumberAcronym")!=null) {
+                acronymTemp = document.getElementById("txtAcronym").value;
+                initNumberAcronymTemp = document.getElementById("txtInitNumberAcronym").value;
+                endNumberAcronymTemp = document.getElementById("txtEndNumberAcronym").value;
+            }
+            const acronym = acronymTemp ;
+            const initNumberAcronym = parseInt(initNumberAcronymTemp);
+            const endNumberAcronym = parseInt(endNumberAcronymTemp);
+            const arraySize = parseInt(arrayFieldTableAdditional.length.toString());
+
+            for(let i = arrayFieldTableAdditional.length; i < arraySize + endNumberAcronym; i++ ){
+                arrayFieldTableAdditional[i] = acronym + (i - arraySize +1);
+            }
+            const tbody = document.getElementById("container-list-numbers-collection");
+            tbody.innerHTML = "";
+
+            let row = null;
+            for (let i = 0; i < arrayFieldTableAdditional.length; i++) {
+                if(i%10===0){
+                    row = document.createElement("tr");
+                }
+                const td = document.createElement("td");
+                td.textContent = arrayFieldTableAdditional[i];
+                if(arrayFieldNewType!=null && arrayFieldNewType.includes(i+1)) {
+                    switch (arrayMapColor.get(i+1)){
+                        case 'Rojo': td.style.backgroundColor = "rgb(245, 66, 39)";break;
+                        case 'Azul': td.style.backgroundColor = "rgb(42, 39, 245)";break;
+                        case 'Amarillo': td.style.backgroundColor = "rgb(242, 245, 39)";break;
+                        case 'Rosado': td.style.backgroundColor = "rgb(245, 39, 221)";break;
+                        case 'Naranja': td.style.backgroundColor = "rgb(245, 166, 39)";break;
+                        case 'Lila': td.style.backgroundColor = "rgb(224, 39, 245)";break;
+                        case 'Celeste': td.style.backgroundColor = "rgb(39, 245, 235)";
+                    }
+                }
+                row.appendChild(td);
+
+                if (i % 10 === 9) {
+                    tbody.appendChild(row);
+                    row = null;
+                }
+
+            }
+            if (row !== null) {
+                tbody.appendChild(row);
+            }
+        }
+
+        async function containerAddTableAdditional(){
+            document.getElementById("container-add-table-additional").innerHTML = `
+                  <center><button onclick="containerTableAdditional(event);cleanDiv('container-add-table-additional')">Add</button></center>
+            `;
+        }
+
+        async function containerTableAdditional(event){
+            event.preventDefault();
+            const tbody = document.getElementById("container-add-news-items-collections");
+            tbody.innerHTML = "";
+            let row = document.createElement("tr");
+
+            row.innerHTML = `
+                    <td>Acronimo:</td>
+                    <td><input type="text" id="txtAcronym"/></td>
+                `;
+            tbody.appendChild(row);
+
+            row = document.createElement("tr");
+            row.innerHTML = `
+                    <td>Valor inicial:</td>
+                    <td><input type="text" id="txtInitNumberAcronym"/></td>
+                `;
+            tbody.appendChild(row);
+
+            row = document.createElement("tr");
+            row.innerHTML = `
+                    <td>Valor final:</td>
+                    <td><input type="text" id="txtEndNumberAcronym"/></td>
+                `;
+            tbody.appendChild(row);
+
+            row = document.createElement("tr");
+            row.innerHTML = `
+                    <td colspan="2"><center><button onclick="formListNumericCollections(event);containerAddTableAdditional();cleanTableType('container-add-news-items-collections')">Agregar</button></center></td>
+                `;
+            tbody.appendChild(row);
         }
 
         async function containerSelectionTypeCollection(event){
@@ -152,7 +260,7 @@
             let numberSelected;
             const countNumbersAdded = arrayFieldNewType.length + 1;
             for (let i=countNumbersAdded; i<=countFieldNewType;i++){
-                numberSelected = parseInt(document.getElementById(`txtNumberSelected_${i}`).value);
+                numberSelected = parseInt(document.getElementById(`txtNumberSelected_${i}`).value);//este parse
                 arrayMapTypes.set(numberSelected,typeCollection);
                 arrayFieldNewType[i-1]=numberSelected;
             }
@@ -204,7 +312,7 @@
             <tr>
                 <td>Cantidad de figuras Numericas</td>
                 <td><input type="text" id="txtCount"/></td>
-                <td><button type="button" onclick="formListNumericCollections(event);containerSelectionTypeCollection(event)">Buscar</button></td>
+                <td><button type="button" onclick="formListNumericCollections(event);containerSelectionTypeCollection(event);containerAddTableAdditional()">Buscar</button></td>
             </tr>
         </table>
         <br/><br/>
@@ -212,6 +320,16 @@
             <thead>
             </thead>
             <tbody id="container-list-numbers-collection">
+            </tbody>
+        </table>
+        <br>
+        <div id="container-add-table-additional">
+        </div>
+        <br><br>
+        <table border="2">
+            <thead>
+            </thead>
+            <tbody id="container-add-news-items-collections">
             </tbody>
         </table>
         <br><br>
