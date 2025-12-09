@@ -5,38 +5,44 @@
 <head>
     <script>
         let countFieldNewType = 1;
-        let arrayMapTypes = new Map();
+        let typeCollection = null;
+        let arrayMapColor = new Map(); //Contiene {"12":"Rojo","14":"Rojo","23":"Azul"}
+        let arrayFieldNewType = [];
+        let arrayMapTypes = new Map(); //Contiene {"12":"Especial lluvia","14":"Especial lluvia","23":"Especial vidrio"}
 
         async function formListNumericCollections(event) {
             event.preventDefault();
 
             if(document.getElementById("opColorCell")!==null){
-                let arrayFieldNewType = [];
                 const colorCell=document.getElementById("opColorCell").value;
-                const typeCollection = document.getElementById("txtTypeCollection").value;
                 let numberSelected;
-                for (let i=1; i<=countFieldNewType;i++){
-                    numberSelected = parseInt(document.getElementById(`txtNumberSelected_${i}`).value);
-                    arrayMapTypes.set(numberSelected,typeCollection);
-                    arrayFieldNewType[i-1]=numberSelected;
+                for(let i=0; i<countFieldNewType;i++){
+                    numberSelected = parseInt(arrayFieldNewType[i]);
+                }
+
+                for(let i=arrayMapColor.size;i<countFieldNewType-1;i++){
+                    arrayMapColor.set(arrayFieldNewType[i],colorCell);
                 }
                 /*for (let [key, value] of arrayMapTypes.entries()) {
                     alert("Fila " + key + ":" + value);
+                }
+                for (let [key, value] of arrayMapColor.entries()) {
+                    alert("Fila " + key + ":" + value);
                 }*/
-                addTable(colorCell,numberSelected,arrayFieldNewType);
+                addTable(numberSelected,arrayFieldNewType);
             }else{
-                addTable(null,null,null);
+                addTable(null,null);
             }
 
         }
 
-        function addTable(colorCell,numberSelected,arrayNumberSelected){
+        function addTable(numberSelected,arrayNumberSelected){
             const countNumeric = parseInt(document.getElementById("txtCount").value);
             //alert(countNumeric);
             //const id = document.getElementById("collectionId").value;
 
-            const tbody = document.getElementById("count-numeric");
-            tbody.innerHTML = ""; // limpiar tabla
+            const tbody = document.getElementById("container-list-numbers-collection");
+            tbody.innerHTML = "";
 
             let row = null;
             for (let i = 0; i < countNumeric; i++) {
@@ -46,7 +52,7 @@
                 const td = document.createElement("td");
                 td.textContent = i+1;
                 if(arrayNumberSelected!=null && arrayNumberSelected.includes(i+1)) {
-                    switch (colorCell){
+                    switch (arrayMapColor.get(i+1)){
                         case 'Rojo': td.style.backgroundColor = "rgb(245, 66, 39)";break;
                         case 'Azul': td.style.backgroundColor = "rgb(42, 39, 245)";break;
                         case 'Amarillo': td.style.backgroundColor = "rgb(242, 245, 39)";break;
@@ -69,9 +75,9 @@
             }
         }
 
-        async function addTypeCollection(event){
+        async function containerSelectionTypeCollection(event){
             event.preventDefault();
-            const tbody = document.getElementById("add-type-confirmation");
+            const tbody = document.getElementById("container-selection-type-collection");
 
             let txtTypeCollectionBefore='';
             let opTypeConfirmationBefore = 'Si';
@@ -80,7 +86,7 @@
                 opTypeConfirmationBefore = document.getElementById("opTypeConfirmation").value;
             }
 
-            tbody.innerHTML = ""; // limpiar tabla
+            tbody.innerHTML = "";
 
             let row = document.createElement("tr");
 
@@ -100,7 +106,8 @@
 
             row = document.createElement("tr");
             row.innerHTML = `
-                    <td colspan="2"><center><button onclick="addNumbersType(event);validateButton()">Confirmar</button></center></td>
+                    <td><center><button onclick="containerAddNumbersTypeCollection(event);confirmationButtonByAddNumbersTypeCollections();cleanTableType('container-selection-type-collection')">Confirmar</button></center></td>
+                    <td><center><button>Guardar</button></center></td>
                 `;
             tbody.appendChild(row);
 
@@ -108,23 +115,24 @@
             document.getElementById("opTypeConfirmation").value = opTypeConfirmationBefore;
         }
 
-        async function addNumbersType(event){
-            const tbody = document.getElementById("count-numeric-type");
-            tbody.innerHTML = ""; // limpiar tabla
+        async function containerAddNumbersTypeCollection(event){
+            typeCollection = document.getElementById("txtTypeCollection").value;
+            const tbody = document.getElementById("container-selection-numbers-type-collection");
+            tbody.innerHTML = "";
 
             let row = document.createElement("tr");
             row.innerHTML = `
                     <td>Indica numero:</td>
                     <td><input type="text" id="txtNumberSelected_${countFieldNewType}"/></td>
-                    <td><center><button onclick="addType(event)">Add</button></center></td>
+                    <td><center><button onclick="containerAddNumbersTypeCollectionComplementary(event)">Add</button></center></td>
                 `;
             tbody.appendChild(row);
         }
 
-        async function addType(event){
+        async function containerAddNumbersTypeCollectionComplementary(event){
             countFieldNewType++;
 
-            const tbody = document.getElementById("count-numeric-type");
+            const tbody = document.getElementById("container-selection-numbers-type-collection");
 
             let row = document.createElement("tr");
             row.innerHTML = `
@@ -134,14 +142,23 @@
             tbody.appendChild(row);
         }
 
-        function validateButton() {
-            document.getElementById("button-confirmation-type").innerHTML = `
-                  <center><button onclick="addColorType()">Confirmar</button></center>
+        function confirmationButtonByAddNumbersTypeCollections() {
+            document.getElementById("container-confirmation-numbers-selection").innerHTML = `
+                  <center><button onclick="containerSelectedColorTypeCollection();cleanTableType('container-selection-numbers-type-collection');cleanDiv('container-confirmation-numbers-selection')">Confirmar</button></center>
             `;
         }
 
-        function addColorType() {
-            document.getElementById("color-type").innerHTML = `
+        function containerSelectedColorTypeCollection() {
+            let numberSelected;
+            const countNumbersAdded = arrayFieldNewType.length + 1;
+            for (let i=countNumbersAdded; i<=countFieldNewType;i++){
+                numberSelected = parseInt(document.getElementById(`txtNumberSelected_${i}`).value);
+                arrayMapTypes.set(numberSelected,typeCollection);
+                arrayFieldNewType[i-1]=numberSelected;
+            }
+            countFieldNewType++;
+
+            document.getElementById("container-selection-color").innerHTML = `
                     <center>
                     <table border="2">
                         <tr>
@@ -159,11 +176,23 @@
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2"><center> <button onclick="formListNumericCollections(event);addTypeCollection(event)">Confirmar</button></center></td>
+                            <td colspan="2"><center> <button onclick="formListNumericCollections(event);containerSelectionTypeCollection(event);cleanDiv('container-selection-color')">Confirmar</button></center></td>
                         </tr>
                     <table>
                     </center>
             `;
+        }
+
+        function cleanTableType(contentTableContainer){
+            const tbody = document.getElementById(contentTableContainer);
+            tbody.innerHTML = "";
+            let row = document.createElement("tr");
+            row.innerHTML = "";
+            tbody.appendChild(row);
+        }
+
+        function cleanDiv(contentDivContainer){
+            document.getElementById(contentDivContainer).innerHTML = "";
         }
     </script>
 </head>
@@ -175,37 +204,34 @@
             <tr>
                 <td>Cantidad de figuras Numericas</td>
                 <td><input type="text" id="txtCount"/></td>
-                <td><button type="button" onclick="formListNumericCollections(event);addTypeCollection(event)">Buscar</button></td>
+                <td><button type="button" onclick="formListNumericCollections(event);containerSelectionTypeCollection(event)">Buscar</button></td>
             </tr>
         </table>
         <br/><br/>
         <table border="2">
             <thead>
             </thead>
-            <tbody id="count-numeric">
-            <!-- Aquí se pintan las filas dinámicamente -->
+            <tbody id="container-list-numbers-collection">
             </tbody>
         </table>
         <br><br>
         <table border="2">
             <thead>
             </thead>
-            <tbody id="add-type-confirmation">
-            <!-- Aquí se pintan las filas dinámicamente -->
+            <tbody id="container-selection-type-collection">
             </tbody>
         </table>
         <br><br>
         <table border="2">
             <thead>
             </thead>
-            <tbody id="count-numeric-type">
-            <!-- Aquí se pintan las filas dinámicamente -->
+            <tbody id="container-selection-numbers-type-collection">
             </tbody>
         </table>
         <br>
-        <div id="button-confirmation-type"></div>
+        <div id="container-confirmation-numbers-selection"></div>
         <br>
-        <div id="color-type"></div>
+        <div id="container-selection-color"></div>
     </center>
 </body>
 </html>
