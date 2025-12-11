@@ -35,7 +35,8 @@
                     <td>${item.destiny}</td>
                     <td>${item.form}</td>
                     <td>${item.binder}</td>
-                    <td><input type="button" value="Modificar" onclick="registerControlCollection(${item.id})"/></td>
+                    <td><input type="button" value="Agregar" onclick="registerControlCollection(${item.id})"/></td>
+                    <td><input type="button" value="Modificar"/></td>
                 `;
 
                 tbody.appendChild(row);
@@ -72,7 +73,7 @@
                     <td>Destiny</td>
                     <td>Form</td>
                     <td>Binder</td>
-                    <td>Modificar</td>
+                    <td colspan="2"><center>Tabla Control</center></td>
                 </tr>
             </thead>
             <tbody id="collections-body">
