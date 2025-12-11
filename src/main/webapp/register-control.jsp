@@ -10,7 +10,6 @@
          * -> Falta listar cuando son letras
          * -> Mapear los campos pendientes para hacer invocacion del backend y persistir en BD
          * -> Invocar backend
-         * -> Realizar una tabla adicional para aquellas colecciones que tengan numeros especiales como: H1, H2, H3, etc --> Pendiente: Pintar celdas de ese tipo
          * */
         let countFieldNewType = 1;
         let typeCollection = null;
@@ -24,20 +23,22 @@
 
             if(document.getElementById("opColorCell")!==null){
                 const colorCell=document.getElementById("opColorCell").value;
-                let numberSelected;
-                for(let i=0; i<countFieldNewType;i++){
-                    numberSelected = parseInt(arrayFieldNewType[i]);
-                }
 
                 for(let i=arrayMapColor.size;i<countFieldNewType-1;i++){
                     arrayMapColor.set(arrayFieldNewType[i],colorCell);
                 }
-                /*for (let [key, value] of arrayMapTypes.entries()) {
+
+                /*alert("Relacion numero figurita y tipo")
+                for (let [key, value] of arrayMapTypes.entries()) {
                     alert("Fila " + key + ":" + value);
-                }*/
-                /*for (let [key, value] of arrayMapColor.entries()) {
+                }
+                alert("Relacion numero figurita y color de tipo")
+                for (let [key, value] of arrayMapColor.entries()) {
                     alert("Fila " + key + ":" + value);
-                }*/
+                }
+                alert("Contenido total de album");
+                alert(arrayFieldTableAdditional);*/
+
                 addTable();
             }else{
                 addTable();
@@ -54,7 +55,7 @@
             tbody.innerHTML = "";
 
             for(let i = 0; i < countNumeric; i++ ){
-                arrayFieldTableAdditional[i] = i + 1;
+                arrayFieldTableAdditional[i] = (i + 1).toString();
             }
 
             let row = null;
@@ -63,7 +64,7 @@
                     row = document.createElement("tr");
                 }
                 const td = document.createElement("td");
-                td.textContent = i+1;
+                td.textContent = (i+1).toString();
                 if(arrayFieldNewType!=null && arrayFieldNewType.includes(i+1)) {
                     switch (arrayMapColor.get(i+1)){
                         case 'Rojo': td.style.backgroundColor = "rgb(245, 66, 39)";break;
@@ -120,8 +121,9 @@
                 }
                 const td = document.createElement("td");
                 td.textContent = arrayFieldTableAdditional[i];
-                if(arrayFieldNewType!=null && arrayFieldNewType.includes(i+1)) {
-                    switch (arrayMapColor.get(i+1)){
+                if(arrayFieldNewType!=null &&  arrayFieldNewType.includes(arrayFieldTableAdditional[i])) {
+
+                    switch (arrayMapColor.get(arrayFieldTableAdditional[i])){
                         case 'Rojo': td.style.backgroundColor = "rgb(245, 66, 39)";break;
                         case 'Azul': td.style.backgroundColor = "rgb(42, 39, 245)";break;
                         case 'Amarillo': td.style.backgroundColor = "rgb(242, 245, 39)";break;
@@ -260,9 +262,9 @@
             let numberSelected;
             const countNumbersAdded = arrayFieldNewType.length + 1;
             for (let i=countNumbersAdded; i<=countFieldNewType;i++){
-                numberSelected = parseInt(document.getElementById(`txtNumberSelected_${i}`).value);//este parse
+                numberSelected = document.getElementById(`txtNumberSelected_${i}`).value.toString();//este parse
                 arrayMapTypes.set(numberSelected,typeCollection);
-                arrayFieldNewType[i-1]=numberSelected;
+                arrayFieldNewType[i-1]=numberSelected.toString();
             }
             countFieldNewType++;
 
