@@ -8,8 +8,7 @@
         /**
          * Pendiente:
          * -> Falta listar cuando son letras
-         * -> Mapear los campos pendientes para hacer invocacion del backend y persistir en BD
-         * -> Invocar backend
+         * -> Mapear los campos pendientes para hacer invocacion del backend y persistir en BD --> status (Crear en otro jsp --> modificar tabla de control)
          * */
         let countFieldNewType = 1;
         let typeCollection = null;
@@ -48,8 +47,6 @@
 
         function addTable(){
             const countNumeric = parseInt(document.getElementById("txtCount").value);
-            //alert(countNumeric);
-            //const id = document.getElementById("collectionId").value;
 
             const tbody = document.getElementById("container-list-numbers-collection");
             tbody.innerHTML = "";
@@ -217,12 +214,61 @@
             row = document.createElement("tr");
             row.innerHTML = `
                     <td><center><button onclick="containerAddNumbersTypeCollection(event);confirmationButtonByAddNumbersTypeCollections();cleanTableType('container-selection-type-collection')">Confirmar</button></center></td>
-                    <td><center><button>Guardar</button></center></td>
+                    <td><center><button onclick="saveControlCollection(event)">Guardar</button></center></td>
                 `;
             tbody.appendChild(row);
 
             document.getElementById("txtTypeCollection").value = txtTypeCollectionBefore;
             document.getElementById("opTypeConfirmation").value = opTypeConfirmationBefore;
+        }
+
+        async function saveControlCollection(event){
+            event.preventDefault();
+            const collectionId = document.getElementById("collectionId").value;
+            let data = [];
+
+
+
+            arrayFieldTableAdditional.forEach(control => {
+                console.log("CONTROL =", control);
+                console.log("TYPE =", getNumberSelected(control));
+                console.log("MAP =", arrayMapTypes);
+                let typeByNumber = getNumberSelected(control);
+                //alert(typeByNumber);
+                const bodyElement = {
+                    type: typeByNumber,
+                    numeration:control,
+                    status: "S",
+                    collectionId
+                }
+                data.push(bodyElement);
+            });
+
+
+            const response = await fetch(`http://localhost:30080/control/save/control-collections`,{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            if(response.ok){
+                window.location.href = "home.jsp";
+            }else{
+                const text = await response.text(); // leer error del backend si existe
+                alert("Error del servidor (status " + response.status + "): " + text);
+            }
+        }
+
+        function getNumberSelected(number){
+            let valueEnd="Basica";
+            for (let [key, value] of arrayMapTypes.entries()) {
+                if(key.toString() === number){
+                    valueEnd = value;
+                }
+            }
+            return valueEnd;
         }
 
         async function containerAddNumbersTypeCollection(event){
