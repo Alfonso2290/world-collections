@@ -16,7 +16,8 @@
             }
 
             //Apunta al NodePort: 30080 (world-control-collection --> Service -> nodePort: 30080)
-            const response = await fetch(`http://localhost:30080/user/validate/user?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, {
+            // Ya no apunta a service NodePort, sino a service LoadBalancer el cual utiliza el puerto 8081
+            const response = await fetch(`http://localhost:8081/user/validate/user?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, {
                 method: "GET"
             });
 

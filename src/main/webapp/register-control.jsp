@@ -245,7 +245,7 @@
             });
 
 
-            const response = await fetch(`http://localhost:30080/control/save/control-collections`,{
+            const response = await fetch(`http://localhost:8081/control/save/control-collections`,{
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

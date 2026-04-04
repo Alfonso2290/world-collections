@@ -46,7 +46,7 @@
         }
 
         async function callRegister(data){
-            const response = await fetch(`http://localhost:30080/control/save/collections`,{
+            const response = await fetch(`http://localhost:8081/control/save/collections`,{
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
