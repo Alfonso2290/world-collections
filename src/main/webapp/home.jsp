@@ -36,7 +36,7 @@
                     <td>${item.form}</td>
                     <td>${item.binder}</td>
                     <td><input type="button" value="Agregar" onclick="registerControlCollection(${item.id})"/></td>
-                    <td><input type="button" value="Modificar"/></td>
+                    <td><input type="button" value="Modificar" onclick="updateControlCollection(${item.id})"/></td>
                 `;
 
                 tbody.appendChild(row);
@@ -49,6 +49,10 @@
 
         function registerControlCollection(id){
             window.location.href = "register-control.jsp?id=" + id;
+        }
+
+        function updateControlCollection(id){
+            window.location.href = "update-control.jsp?id=" + id;
         }
         window.onload = formListCollectionsFilterName; // ejecutar al cargar
     </script>
