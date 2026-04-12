@@ -140,7 +140,10 @@
             const collectionId = document.getElementById("collectionId").value;
             const status = document.getElementById("statusControl").value;
             const numeration = document.getElementById("figureControl").value;
-            const type = document.getElementById("typeControl").value;
+            let type = document.getElementById("typeControl").value;
+
+            if(type==='') type = null;
+
 
             let statusFinal='';
             if(status==='Yala') statusFinal = "S"; //Yala
