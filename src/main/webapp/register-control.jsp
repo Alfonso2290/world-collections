@@ -101,12 +101,21 @@
                 endNumberAcronymTemp = document.getElementById("txtEndNumberAcronym").value;
             }
             const acronym = acronymTemp ;
-            const initNumberAcronym = parseInt(initNumberAcronymTemp);
-            const endNumberAcronym = parseInt(endNumberAcronymTemp);
+            let initNumberAcronym = parseInt(initNumberAcronymTemp);
+            let endNumberAcronym = parseInt(endNumberAcronymTemp);
             const arraySize = parseInt(arrayFieldTableAdditional.length.toString());
 
-            for(let i = arrayFieldTableAdditional.length; i < arraySize + endNumberAcronym; i++ ){
-                arrayFieldTableAdditional[i] = acronym + (i - arraySize +1);
+            if(acronym === 'Letra'){
+                initNumberAcronym = initNumberAcronymTemp.toString().toUpperCase().charCodeAt(0) - 64;
+                endNumberAcronym = endNumberAcronymTemp.toString().toUpperCase().charCodeAt(0) - 64;
+            }
+
+            for(let i = arrayFieldTableAdditional.length; i < arraySize + (endNumberAcronym - initNumberAcronym) + 1; i++ ){
+                if(acronym == 'Letra'){
+                    arrayFieldTableAdditional[i] = String.fromCharCode((i - arraySize) + initNumberAcronym + 64);
+                }else{
+                    arrayFieldTableAdditional[i] = acronym + (i - arraySize +initNumberAcronym);
+                }
             }
             const tbody = document.getElementById("container-list-numbers-collection");
             tbody.innerHTML = "";
