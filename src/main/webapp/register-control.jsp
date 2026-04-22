@@ -7,15 +7,49 @@
 
         /**
          * Pendiente:
-         * -> Falta listar cuando son letras
-         * -> Mapear los campos pendientes para hacer invocacion del backend y persistir en BD --> status (Crear en otro jsp --> modificar tabla de control)
+         *
+         * CASO PINTAR CELDAS
+         * ------------------
+         * CASO 1:
+         * Cuando agregue la logica de aceptar mas de 1 numeros iguales Ejm (num: 101,102)
+         * quiera pintar ambos quitar condicional
+         * !jsonArrayMapColor.some(obj => obj.number === arrayFieldTableAdditional[i].toString())
+         * Ya que eso no me permite pintar 2 numeros iguales
+         * Sin embargo, buscar una logica para que no ocurra el caso
+         * (101, 102) 100, 101, 160,161 --> agrega 160,161
+         * (10, 11) 9 10 100 101 162 163 --> agrega 162 163, 100, 101
+         * (A, B) 9 10 100 101 164 165 --> agrega 164 165 9 10
+         *
+         * CASO 2:
+         * Que permita pintar mas de 2 elementos, actualmente solo pinta el ultimo numero encontrado
+         * Sin embargo, mas adelante necesitaré que pinte los N numeros iguales ejemplo (101,101,101)
+         * Para ello el orden de pintar será primero el ultimo que encuentre luego el penultimo ... hasta el primero que encuentre
+         *
+         *
+         * CASO 3:
+         * Las letras tbn deben aplicarse la logica del CASO 1 Y 2 ..ES DECIR, PUEDO TENER MAS DE 1 LETRA IGUAL (A,A,A)
+         *
+         *
+         * CASO 4:
+         * Las letras añadidas actualmente no permiten la Ñ, adaptar para que si se pueda usar
+         *
          * */
         let countFieldNewType = 1;
         let typeCollection = null;
         let arrayMapColor = new Map(); //Contiene {"12":"Rojo","14":"Rojo","23":"Azul"}
-        let arrayFieldNewType = [];
+        let jsonArrayMapColor = []; //Contiene [{number:"12", color:"Rojo", index:"1" },{number:"14", color:"Azul", index:"12" }]
+        let arrayFieldNewType = []; //Contiene los numeros que voy agregando en boton Add
+        let indexes = []; //Contiene indices a agregar {101,102,160,161}
         let arrayMapTypes = new Map(); //Contiene {"12":"Especial lluvia","14":"Especial lluvia","23":"Especial vidrio"}
         let arrayFieldTableAdditional = []; //Contiene todos los numeros de la coleccion
+
+        function addElementArrayMapColor(number, color, index) {
+            jsonArrayMapColor.push({
+                number: number,
+                color: color,
+                index: index
+            });
+        }
 
         async function formListNumericCollections(event) {
             event.preventDefault();
@@ -23,25 +57,28 @@
             if(document.getElementById("opColorCell")!==null){
                 const colorCell=document.getElementById("opColorCell").value;
 
+                //size=2 => i=2, 3, 4, 5
+                //alert("Inicio for: " + arrayMapColor.size);
+                //alert("Fin de for: " + countFieldNewType-1);
+                //<5
                 for(let i=arrayMapColor.size;i<countFieldNewType-1;i++){
                     arrayMapColor.set(arrayFieldNewType[i],colorCell);
+                    /*alert(arrayFieldNewType[i].toString());
+                    alert(colorCell.toString());
+                    alert(indexes[i].toString());*/
+                    //alert("Iterador: (" + i + "): " + arrayFieldNewType[i].toString());
+                    //alert("Indexes valores: " + indexes[i].toString());
+                    addElementArrayMapColor(arrayFieldNewType[i].toString(), colorCell.toString(), indexes[i].toString());
                 }
-
-                /*alert("Relacion numero figurita y tipo")
-                for (let [key, value] of arrayMapTypes.entries()) {
-                    alert("Fila " + key + ":" + value);
-                }
-                alert("Relacion numero figurita y color de tipo")
-                for (let [key, value] of arrayMapColor.entries()) {
-                    alert("Fila " + key + ":" + value);
-                }
-                alert("Contenido total de album");
-                alert(arrayFieldTableAdditional);*/
 
                 addTable();
             }else{
                 addTable();
             }
+
+            /*jsonArrayMapColor.forEach(function(item) {
+                alert("Json: " + item.index + "/" + item.number + "/" + item.color);
+            });*/
 
         }
 
@@ -63,7 +100,9 @@
                 const td = document.createElement("td");
                 td.textContent = (i+1).toString();
                 if(arrayFieldNewType!=null && arrayFieldNewType.includes(i+1)) {
-                    switch (arrayMapColor.get(i+1)){
+                    const number = i +1;
+                    const elementJson = jsonArrayMapColor.find(item => item.number.toString() === number.toString() && (item.index ? item.index.toString()===i.toString() : true));
+                    switch (elementJson.color){
                         case 'Rojo': td.style.backgroundColor = "rgb(245, 66, 39)";break;
                         case 'Azul': td.style.backgroundColor = "rgb(42, 39, 245)";break;
                         case 'Amarillo': td.style.backgroundColor = "rgb(242, 245, 39)";break;
@@ -86,7 +125,6 @@
             }
 
             addTableAdditional(event);
-
         }
 
         function addTableAdditional(event){
@@ -111,12 +149,18 @@
             }
 
             for(let i = arrayFieldTableAdditional.length; i < arraySize + (endNumberAcronym - initNumberAcronym) + 1; i++ ){
-                if(acronym == 'Letra'){
+                if(acronym === 'Letra'){
                     arrayFieldTableAdditional[i] = String.fromCharCode((i - arraySize) + initNumberAcronym + 64);
-                }else{
+                }else if(acronym === 'Numero') {
+                    arrayFieldTableAdditional[i] = i - arraySize + initNumberAcronym;
+                }
+                else{
                     arrayFieldTableAdditional[i] = acronym + (i - arraySize +initNumberAcronym);
                 }
+
+
             }
+
             const tbody = document.getElementById("container-list-numbers-collection");
             tbody.innerHTML = "";
 
@@ -127,18 +171,29 @@
                 }
                 const td = document.createElement("td");
                 td.textContent = arrayFieldTableAdditional[i];
-                if(arrayFieldNewType!=null &&  arrayFieldNewType.includes(arrayFieldTableAdditional[i])) {
 
-                    switch (arrayMapColor.get(arrayFieldTableAdditional[i])){
-                        case 'Rojo': td.style.backgroundColor = "rgb(245, 66, 39)";break;
-                        case 'Azul': td.style.backgroundColor = "rgb(42, 39, 245)";break;
-                        case 'Amarillo': td.style.backgroundColor = "rgb(242, 245, 39)";break;
-                        case 'Rosado': td.style.backgroundColor = "rgb(245, 39, 221)";break;
-                        case 'Naranja': td.style.backgroundColor = "rgb(245, 166, 39)";break;
-                        case 'Lila': td.style.backgroundColor = "rgb(224, 39, 245)";break;
-                        case 'Celeste': td.style.backgroundColor = "rgb(39, 245, 235)";
+                if (arrayFieldNewType != null /*&& arrayFieldNewType.includes(arrayFieldTableAdditional[i].toString())*/
+                    /*&& arrayTemp.lastIndexOf(arrayFieldTableAdditional[i].toString()) === i*/) {
+
+
+                    const number = arrayFieldTableAdditional[i].toString();
+                    const elementJson = jsonArrayMapColor.find(item => item.number.toString() === number.toString() && item.index.toString() === i.toString());
+
+                    if(elementJson){
+                        //alert("Indices a pintar: " + i);
+                        switch (elementJson.color){
+                            case 'Rojo': td.style.backgroundColor = "rgb(245, 66, 39)";break;
+                            case 'Azul': td.style.backgroundColor = "rgb(42, 39, 245)";break;
+                            case 'Amarillo': td.style.backgroundColor = "rgb(242, 245, 39)";break;
+                            case 'Rosado': td.style.backgroundColor = "rgb(245, 39, 221)";break;
+                            case 'Naranja': td.style.backgroundColor = "rgb(245, 166, 39)";break;
+                            case 'Lila': td.style.backgroundColor = "rgb(224, 39, 245)";break;
+                            case 'Celeste': td.style.backgroundColor = "rgb(39, 245, 235)";
+                        }
                     }
+
                 }
+
                 row.appendChild(td);
 
                 if (i % 10 === 9) {
@@ -147,9 +202,11 @@
                 }
 
             }
+
             if (row !== null) {
                 tbody.appendChild(row);
             }
+
         }
 
         async function containerAddTableAdditional(){
@@ -236,14 +293,11 @@
             const collectionId = document.getElementById("collectionId").value;
             let data = [];
 
-
-
             arrayFieldTableAdditional.forEach(control => {
                 console.log("CONTROL =", control);
                 console.log("TYPE =", getNumberSelected(control));
                 console.log("MAP =", arrayMapTypes);
                 let typeByNumber = getNumberSelected(control);
-                //alert(typeByNumber);
                 const bodyElement = {
                     type: typeByNumber,
                     numeration:control,
@@ -314,6 +368,7 @@
         }
 
         function containerSelectedColorTypeCollection() {
+
             let numberSelected;
             const countNumbersAdded = arrayFieldNewType.length + 1;
             for (let i=countNumbersAdded; i<=countFieldNewType;i++){
@@ -321,6 +376,38 @@
                 arrayMapTypes.set(numberSelected,typeCollection);
                 arrayFieldNewType[i-1]=numberSelected.toString();
             }
+
+            let ultimosNumeros = {};
+            for (let i = 0; i < arrayFieldTableAdditional.length; i++) {
+                for (let j = 0; j < arrayFieldNewType.length; j++){
+
+                    /**Cuando agregue la logica de aceptar mas de 1 numeros iguales Ejm (num: 101,102)
+                     * quiera pintar ambos quitar condicional
+                     * !jsonArrayMapColor.some(obj => obj.number === arrayFieldTableAdditional[i].toString())
+                     * Ya que eso no me permite pintar 2 numeros iguales
+                     * Sin embargo, buscar una logica para que no ocurra el caso
+                     * (101, 102) 100, 101, 160,161 --> agrega 160,161
+                     * (10, 11) 9 10 100 101 162 163 --> agrega 162 163, 100, 101
+                     * (A, B) 9 10 100 101 164 165 --> agrega 164 165 9 10
+                     * **/
+                    if(arrayFieldTableAdditional[i].toString() === arrayFieldNewType[j].toString() && !indexes.includes(i) && !jsonArrayMapColor.some(obj => obj.number === arrayFieldTableAdditional[i].toString())){
+                        //const count = arrayFieldTableAdditional.filter(x => x === arrayFieldTableAdditional[i].toString()).length;
+                        if(isNumber(arrayFieldTableAdditional[i].toString()) /*&& count>1*/){
+                            //alert("Ingresa a numero: (" + i + ")-> " + arrayFieldTableAdditional[i].toString());
+                            ultimosNumeros[arrayFieldTableAdditional[i].toString()] = i;
+                        }else{
+                            indexes.push(i);
+                        }
+                    }
+                }
+            }
+            //alert("antes de agregar numero");
+            //indexes.forEach(x => alert("Index: " + x));
+            indexes.push(...Object.values(ultimosNumeros));
+            //alert("luego de agregar numero");
+            //indexes.forEach(x => alert("Index: " + x));
+            //alert(indexes);
+
             countFieldNewType++;
 
             document.getElementById("container-selection-color").innerHTML = `
@@ -346,6 +433,10 @@
                     <table>
                     </center>
             `;
+        }
+
+        function isNumber(valor) {
+            return !isNaN(valor) && valor.trim() !== "";
         }
 
         function cleanTableType(contentTableContainer){
