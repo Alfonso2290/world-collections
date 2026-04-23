@@ -11,22 +11,6 @@
          * CASO PINTAR CELDAS
          * ------------------
          * CASO 1:
-         * Cuando agregue la logica de aceptar mas de 1 numeros iguales Ejm (num: 101,102)
-         * quiera pintar ambos quitar condicional
-         * !jsonArrayMapColor.some(obj => obj.number === arrayFieldTableAdditional[i].toString())
-         * Ya que eso no me permite pintar 2 numeros iguales
-         * Sin embargo, buscar una logica para que no ocurra el caso
-         * (101, 102) 100, 101, 160,161 --> agrega 160,161
-         * (10, 11) 9 10 100 101 162 163 --> agrega 162 163, 100, 101
-         * (A, B) 9 10 100 101 164 165 --> agrega 164 165 9 10
-         *
-         * CASO 2:
-         * Que permita pintar mas de 2 elementos, actualmente solo pinta el ultimo numero encontrado
-         * Sin embargo, mas adelante necesitaré que pinte los N numeros iguales ejemplo (101,101,101)
-         * Para ello el orden de pintar será primero el ultimo que encuentre luego el penultimo ... hasta el primero que encuentre
-         *
-         *
-         * CASO 3:
          * Las letras tbn deben aplicarse la logica del CASO 1 Y 2 ..ES DECIR, PUEDO TENER MAS DE 1 LETRA IGUAL (A,A,A)
          *
          *
@@ -370,31 +354,38 @@
         function containerSelectedColorTypeCollection() {
 
             let numberSelected;
+            let arrayTempFieldNewType = [];
+            let count = 0;
             const countNumbersAdded = arrayFieldNewType.length + 1;
             for (let i=countNumbersAdded; i<=countFieldNewType;i++){
                 numberSelected = document.getElementById(`txtNumberSelected_${i}`).value.toString();//este parse
                 arrayMapTypes.set(numberSelected,typeCollection);
                 arrayFieldNewType[i-1]=numberSelected.toString();
+                arrayTempFieldNewType[count] = numberSelected.toString();
+                count++;
+
             }
 
             let ultimosNumeros = {};
             for (let i = 0; i < arrayFieldTableAdditional.length; i++) {
+
                 for (let j = 0; j < arrayFieldNewType.length; j++){
 
-                    /**Cuando agregue la logica de aceptar mas de 1 numeros iguales Ejm (num: 101,102)
-                     * quiera pintar ambos quitar condicional
-                     * !jsonArrayMapColor.some(obj => obj.number === arrayFieldTableAdditional[i].toString())
-                     * Ya que eso no me permite pintar 2 numeros iguales
-                     * Sin embargo, buscar una logica para que no ocurra el caso
-                     * (101, 102) 100, 101, 160,161 --> agrega 160,161
-                     * (10, 11) 9 10 100 101 162 163 --> agrega 162 163, 100, 101
-                     * (A, B) 9 10 100 101 164 165 --> agrega 164 165 9 10
-                     * **/
-                    if(arrayFieldTableAdditional[i].toString() === arrayFieldNewType[j].toString() && !indexes.includes(i) && !jsonArrayMapColor.some(obj => obj.number === arrayFieldTableAdditional[i].toString())){
-                        //const count = arrayFieldTableAdditional.filter(x => x === arrayFieldTableAdditional[i].toString()).length;
-                        if(isNumber(arrayFieldTableAdditional[i].toString()) /*&& count>1*/){
+                    if(arrayFieldTableAdditional[i].toString() === arrayFieldNewType[j].toString() && !indexes.includes(i) && arrayTempFieldNewType.includes(arrayFieldTableAdditional[i].toString())){
+                        const count = arrayFieldTableAdditional.filter(x => x.toString() === arrayFieldTableAdditional[i].toString()).length;
+                        //alert("Cantidad de " + arrayFieldTableAdditional[i].toString() + ": " + count);
+                        if(isNumber(arrayFieldTableAdditional[i].toString())){
                             //alert("Ingresa a numero: (" + i + ")-> " + arrayFieldTableAdditional[i].toString());
-                            ultimosNumeros[arrayFieldTableAdditional[i].toString()] = i;
+                            //ultimosNumeros[arrayFieldTableAdditional[i].toString()] = i;
+                            if(jsonArrayMapColor.some(obj => obj.number === arrayFieldTableAdditional[i].toString())){
+                                const elementJson = jsonArrayMapColor.find(item => item.index.toString()===i.toString());
+                                const indexVar = elementJson?.index;
+                                if(indexVar!==i.toString()){
+                                    indexes.push(i);
+                                }
+                            }else{
+                                ultimosNumeros[arrayFieldTableAdditional[i].toString()] = i;
+                            }
                         }else{
                             indexes.push(i);
                         }
