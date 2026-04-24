@@ -11,27 +11,39 @@
          * CASO PINTAR CELDAS
          * ------------------
          * CASO 1:
-         * Las letras tbn deben aplicarse la logica del CASO 1 Y 2 ..ES DECIR, PUEDO TENER MAS DE 1 LETRA IGUAL (A,A,A)
-         *
-         *
-         * CASO 4:
          * Las letras añadidas actualmente no permiten la Ñ, adaptar para que si se pueda usar
          *
          * */
         let countFieldNewType = 1;
         let typeCollection = null;
-        let arrayMapColor = new Map(); //Contiene {"12":"Rojo","14":"Rojo","23":"Azul"}
+        let arrayMapColor = []; //Contiene {"12":"Rojo","14":"Rojo","23":"Azul"}
         let jsonArrayMapColor = []; //Contiene [{number:"12", color:"Rojo", index:"1" },{number:"14", color:"Azul", index:"12" }]
         let arrayFieldNewType = []; //Contiene los numeros que voy agregando en boton Add
         let indexes = []; //Contiene indices a agregar {101,102,160,161}
-        let arrayMapTypes = new Map(); //Contiene {"12":"Especial lluvia","14":"Especial lluvia","23":"Especial vidrio"}
+        let arrayMapTypes = []; //Contiene {"12":"Especial lluvia","14":"Especial lluvia","23":"Especial vidrio"}
+        let arrayTypes = [];
         let arrayFieldTableAdditional = []; //Contiene todos los numeros de la coleccion
 
-        function addElementArrayMapColor(number, color, index) {
+        function addElementArrayMapColor(number, color, index, type) {
             jsonArrayMapColor.push({
-                number: number,
-                color: color,
-                index: index
+                number,
+                color,
+                index,
+                type
+            });
+        }
+
+        function addElementArrayMapTypes(number, type) {
+            arrayMapTypes.push({
+                number,
+                type
+            });
+        }
+
+        function addElementArrayColor(number, color) {
+            arrayMapColor.push({
+                number,
+                color
             });
         }
 
@@ -41,18 +53,10 @@
             if(document.getElementById("opColorCell")!==null){
                 const colorCell=document.getElementById("opColorCell").value;
 
-                //size=2 => i=2, 3, 4, 5
-                //alert("Inicio for: " + arrayMapColor.size);
-                //alert("Fin de for: " + countFieldNewType-1);
-                //<5
-                for(let i=arrayMapColor.size;i<countFieldNewType-1;i++){
-                    arrayMapColor.set(arrayFieldNewType[i],colorCell);
-                    /*alert(arrayFieldNewType[i].toString());
-                    alert(colorCell.toString());
-                    alert(indexes[i].toString());*/
-                    //alert("Iterador: (" + i + "): " + arrayFieldNewType[i].toString());
-                    //alert("Indexes valores: " + indexes[i].toString());
-                    addElementArrayMapColor(arrayFieldNewType[i].toString(), colorCell.toString(), indexes[i].toString());
+                for(let i=arrayMapColor.length;i<countFieldNewType-1;i++){
+                    addElementArrayColor(arrayFieldNewType[i],colorCell);
+                    //alert("Agregando: Num" + arrayFieldNewType[i].toString() + " - Color: " + colorCell.toString() + " - Indice: " + indexes[i].toString() + " - Tipo: " +  arrayTypes[i].toString());
+                    addElementArrayMapColor(arrayFieldNewType[i].toString(), colorCell.toString(), indexes[i].toString(), arrayTypes[i].toString());
                 }
 
                 addTable();
@@ -142,7 +146,6 @@
                     arrayFieldTableAdditional[i] = acronym + (i - arraySize +initNumberAcronym);
                 }
 
-
             }
 
             const tbody = document.getElementById("container-list-numbers-collection");
@@ -156,10 +159,7 @@
                 const td = document.createElement("td");
                 td.textContent = arrayFieldTableAdditional[i];
 
-                if (arrayFieldNewType != null /*&& arrayFieldNewType.includes(arrayFieldTableAdditional[i].toString())*/
-                    /*&& arrayTemp.lastIndexOf(arrayFieldTableAdditional[i].toString()) === i*/) {
-
-
+                if (arrayFieldNewType != null) {
                     const number = arrayFieldTableAdditional[i].toString();
                     const elementJson = jsonArrayMapColor.find(item => item.number.toString() === number.toString() && item.index.toString() === i.toString());
 
@@ -276,21 +276,22 @@
             event.preventDefault();
             const collectionId = document.getElementById("collectionId").value;
             let data = [];
-
-            arrayFieldTableAdditional.forEach(control => {
-                console.log("CONTROL =", control);
-                console.log("TYPE =", getNumberSelected(control));
-                console.log("MAP =", arrayMapTypes);
-                let typeByNumber = getNumberSelected(control);
+            /*
+            jsonArrayMapColor.forEach(function(item) {
+                alert("Json: " + item.index + "/" + item.number + "/" + item.color + "/" + item.type);
+            });*/
+            let position = 0;
+            arrayFieldTableAdditional.forEach(number => {
+                let typeByNumber = getNumberSelected(number, position);
+                position++;
                 const bodyElement = {
                     type: typeByNumber,
-                    numeration:control,
+                    numeration:number,
                     status: "S",
                     collectionId
                 }
                 data.push(bodyElement);
             });
-
 
             const response = await fetch(`http://localhost:8081/control/save/control-collections`,{
                 method: "POST",
@@ -303,17 +304,16 @@
             if(response.ok){
                 window.location.href = "home.jsp";
             }else{
-                const text = await response.text(); // leer error del backend si existe
+                const text = await response.text();
                 alert("Error del servidor (status " + response.status + "): " + text);
             }
         }
 
-        function getNumberSelected(number){
+        function getNumberSelected(number, index){
             let valueEnd="Basica";
-            for (let [key, value] of arrayMapTypes.entries()) {
-                if(key.toString() === number){
-                    valueEnd = value;
-                }
+            const jsonElement = jsonArrayMapColor.find(item => item.index.toString() === index.toString() && item.number.toString() === number.toString());
+            if(jsonElement){
+                valueEnd = jsonElement?.type.toString();
             }
             return valueEnd;
         }
@@ -352,52 +352,34 @@
         }
 
         function containerSelectedColorTypeCollection() {
-
             let numberSelected;
             let arrayTempFieldNewType = [];
             let count = 0;
             const countNumbersAdded = arrayFieldNewType.length + 1;
             for (let i=countNumbersAdded; i<=countFieldNewType;i++){
-                numberSelected = document.getElementById(`txtNumberSelected_${i}`).value.toString();//este parse
-                arrayMapTypes.set(numberSelected,typeCollection);
+                numberSelected = document.getElementById(`txtNumberSelected_${i}`).value.toString();
+                addElementArrayMapTypes(numberSelected,typeCollection);
+                arrayTypes[i-1] = typeCollection;
                 arrayFieldNewType[i-1]=numberSelected.toString();
                 arrayTempFieldNewType[count] = numberSelected.toString();
                 count++;
-
             }
 
             let ultimosNumeros = {};
             for (let i = 0; i < arrayFieldTableAdditional.length; i++) {
-
-                for (let j = 0; j < arrayFieldNewType.length; j++){
-
-                    if(arrayFieldTableAdditional[i].toString() === arrayFieldNewType[j].toString() && !indexes.includes(i) && arrayTempFieldNewType.includes(arrayFieldTableAdditional[i].toString())){
-                        const count = arrayFieldTableAdditional.filter(x => x.toString() === arrayFieldTableAdditional[i].toString()).length;
-                        //alert("Cantidad de " + arrayFieldTableAdditional[i].toString() + ": " + count);
-                        if(isNumber(arrayFieldTableAdditional[i].toString())){
-                            //alert("Ingresa a numero: (" + i + ")-> " + arrayFieldTableAdditional[i].toString());
-                            //ultimosNumeros[arrayFieldTableAdditional[i].toString()] = i;
-                            if(jsonArrayMapColor.some(obj => obj.number === arrayFieldTableAdditional[i].toString())){
-                                const elementJson = jsonArrayMapColor.find(item => item.index.toString()===i.toString());
-                                const indexVar = elementJson?.index;
-                                if(indexVar!==i.toString()){
-                                    indexes.push(i);
-                                }
-                            }else{
-                                ultimosNumeros[arrayFieldTableAdditional[i].toString()] = i;
-                            }
-                        }else{
+                if(!indexes.includes(i) && arrayTempFieldNewType.includes(arrayFieldTableAdditional[i].toString())){
+                    if(jsonArrayMapColor.some(obj => obj.number === arrayFieldTableAdditional[i].toString())){
+                        const elementJson = jsonArrayMapColor.find(item => item.index.toString()===i.toString());
+                        const indexVar = elementJson?.index;
+                        if(indexVar!==i.toString()){
                             indexes.push(i);
                         }
+                    }else{
+                        ultimosNumeros[arrayFieldTableAdditional[i].toString()] = i;
                     }
                 }
             }
-            //alert("antes de agregar numero");
-            //indexes.forEach(x => alert("Index: " + x));
             indexes.push(...Object.values(ultimosNumeros));
-            //alert("luego de agregar numero");
-            //indexes.forEach(x => alert("Index: " + x));
-            //alert(indexes);
 
             countFieldNewType++;
 
