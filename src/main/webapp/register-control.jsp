@@ -1,17 +1,17 @@
 <%
     String requestId = request.getParameter("id");
 %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html>
 <head>
+    <meta charset="UTF-8">
     <script>
 
         /**
          * Pendiente:
          *
-         * CASO PINTAR CELDAS
-         * ------------------
-         * CASO 1:
-         * Las letras añadidas actualmente no permiten la Ñ, adaptar para que si se pueda usar
+         * REALIZAR VALIDACIONES
+         * ---------------------
          *
          * */
         let countFieldNewType = 1;
@@ -23,6 +23,17 @@
         let arrayMapTypes = []; //Contiene {"12":"Especial lluvia","14":"Especial lluvia","23":"Especial vidrio"}
         let arrayTypes = [];
         let arrayFieldTableAdditional = []; //Contiene todos los numeros de la coleccion
+        const abecedary = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+
+        function letterToNumber(letter) {
+            const index = abecedary.indexOf(letter.toUpperCase());
+            return index !== -1 ? index + 1 : null;
+        }
+
+        function numberToLetter(number) {
+            if (number < 1 || number > abecedary.length) return null;
+            return abecedary[number - 1];
+        }
 
         function addElementArrayMapColor(number, color, index, type) {
             jsonArrayMapColor.push({
@@ -136,11 +147,18 @@
                 endNumberAcronym = endNumberAcronymTemp.toString().toUpperCase().charCodeAt(0) - 64;
             }
 
+            if(acronym === 'Letra Latina'){
+                initNumberAcronym = letterToNumber(initNumberAcronymTemp);
+                endNumberAcronym = letterToNumber(endNumberAcronymTemp);
+            }
+
             for(let i = arrayFieldTableAdditional.length; i < arraySize + (endNumberAcronym - initNumberAcronym) + 1; i++ ){
                 if(acronym === 'Letra'){
                     arrayFieldTableAdditional[i] = String.fromCharCode((i - arraySize) + initNumberAcronym + 64);
                 }else if(acronym === 'Numero') {
                     arrayFieldTableAdditional[i] = i - arraySize + initNumberAcronym;
+                }else if(acronym === 'Letra Latina'){
+                    arrayFieldTableAdditional[i] = numberToLetter((i - arraySize) + initNumberAcronym);
                 }
                 else{
                     arrayFieldTableAdditional[i] = acronym + (i - arraySize +initNumberAcronym);
