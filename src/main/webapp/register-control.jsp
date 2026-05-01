@@ -152,6 +152,15 @@
                 endNumberAcronym = letterToNumber(endNumberAcronymTemp);
             }
 
+            let arrayNumber = [];
+            let countRange = 0;
+            if(acronym === 'Rango'){
+                arrayNumber = initNumberAcronymTemp.toString().split(",");
+                initNumberAcronym = 1 ;
+                endNumberAcronym = arrayNumber.length;
+            }
+
+
             for(let i = arrayFieldTableAdditional.length; i < arraySize + (endNumberAcronym - initNumberAcronym) + 1; i++ ){
                 if(acronym === 'Letra'){
                     arrayFieldTableAdditional[i] = String.fromCharCode((i - arraySize) + initNumberAcronym + 64);
@@ -159,6 +168,9 @@
                     arrayFieldTableAdditional[i] = i - arraySize + initNumberAcronym;
                 }else if(acronym === 'Letra Latina'){
                     arrayFieldTableAdditional[i] = numberToLetter((i - arraySize) + initNumberAcronym);
+                }else if(acronym === 'Rango'){
+                    arrayFieldTableAdditional[i] = parseInt(arrayNumber[countRange]);
+                    countRange++;
                 }
                 else{
                     arrayFieldTableAdditional[i] = acronym + (i - arraySize +initNumberAcronym);
