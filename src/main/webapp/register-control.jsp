@@ -160,7 +160,6 @@
                 endNumberAcronym = arrayNumber.length;
             }
 
-
             for(let i = arrayFieldTableAdditional.length; i < arraySize + (endNumberAcronym - initNumberAcronym) + 1; i++ ){
                 if(acronym === 'Letra'){
                     arrayFieldTableAdditional[i] = String.fromCharCode((i - arraySize) + initNumberAcronym + 64);
@@ -355,6 +354,13 @@
 
             let row = document.createElement("tr");
             row.innerHTML = `
+                    <td>Rango:</td>
+                    <td><select id="opRange"><option>Si</option><option>No</option></select</td>
+                `;
+            tbody.appendChild(row);
+
+            row = document.createElement("tr");
+            row.innerHTML = `
                     <td>Indica numero:</td>
                     <td><input type="text" id="txtNumberSelected_${countFieldNewType}"/></td>
                     <td><center><button onclick="containerAddNumbersTypeCollectionComplementary(event)">Add</button></center></td>
@@ -363,16 +369,21 @@
         }
 
         async function containerAddNumbersTypeCollectionComplementary(event){
-            countFieldNewType++;
+            const flagRange = document.getElementById("opRange").value;
 
-            const tbody = document.getElementById("container-selection-numbers-type-collection");
+            if(flagRange==='No'){
+                countFieldNewType++;
 
-            let row = document.createElement("tr");
-            row.innerHTML = `
+                const tbody = document.getElementById("container-selection-numbers-type-collection");
+
+                let row = document.createElement("tr");
+                row.innerHTML = `
                     <td>Indica numero:</td>
                     <td><input type="text" id="txtNumberSelected_${countFieldNewType}"/></td>
                 `;
-            tbody.appendChild(row);
+                tbody.appendChild(row);
+            }
+
         }
 
         function confirmationButtonByAddNumbersTypeCollections() {
@@ -385,14 +396,27 @@
             let numberSelected;
             let arrayTempFieldNewType = [];
             let count = 0;
+            let arrayNumber = [];
             const countNumbersAdded = arrayFieldNewType.length + 1;
             for (let i=countNumbersAdded; i<=countFieldNewType;i++){
                 numberSelected = document.getElementById(`txtNumberSelected_${i}`).value.toString();
-                addElementArrayMapTypes(numberSelected,typeCollection);
-                arrayTypes[i-1] = typeCollection;
-                arrayFieldNewType[i-1]=numberSelected.toString();
-                arrayTempFieldNewType[count] = numberSelected.toString();
-                count++;
+                if(numberSelected.toString().includes(",")){
+                    arrayNumber = numberSelected.toString().split(",");
+                    for(let j=0; j<arrayNumber.length;j++){
+                        addElementArrayMapTypes(arrayNumber[j].toString(),typeCollection);
+                        arrayTypes[i-1+j] = typeCollection;
+                        arrayFieldNewType[i-1+j]=arrayNumber[j].toString();
+                        arrayTempFieldNewType[count] = arrayNumber[j].toString();
+                        count++;
+                    }
+                }else {
+                    addElementArrayMapTypes(numberSelected,typeCollection);
+                    arrayTypes[i-1] = typeCollection;
+                    arrayFieldNewType[i-1]=numberSelected.toString();
+                    arrayTempFieldNewType[count] = numberSelected.toString();
+                    count++;
+                }
+
             }
 
             let ultimosNumeros = {};
@@ -411,7 +435,12 @@
             }
             indexes.push(...Object.values(ultimosNumeros));
 
-            countFieldNewType++;
+            if(arrayNumber.length>0){
+                arrayNumber.forEach(x=> countFieldNewType++);
+            }else{
+                countFieldNewType++;
+            }
+
 
             document.getElementById("container-selection-color").innerHTML = `
                     <center>
