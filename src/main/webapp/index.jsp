@@ -1,5 +1,70 @@
 <html>
 <head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+        }
+
+        table {
+            border-collapse: collapse;
+            background-color: #ffffff;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        td {
+            padding: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 6px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+        .custom-alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            min-width: 250px;
+            padding: 12px 16px;
+            border-radius: 6px;
+            color: white;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+        }
+
+        .custom-alert.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .success {
+            background-color: #28a745;
+        }
+
+        .error {
+            background-color: #dc3545;
+        }
+    </style>
     <script>
         async function login(event) {
             event.preventDefault(); // Evita que el formulario recargue la página
@@ -25,11 +90,29 @@
 
 
             if (result.status === '200') {
-                alert("Login exitoso: " + JSON.stringify(result));
+                showAlert("Login exitoso", "success");
                 window.location.href = "home.jsp";
             } else {
-                alert("Error: " + JSON.stringify(result));
+                showAlert("Credenciales incorrectas", "error");
             }
+        }
+
+        /**Mejora estilo de mensaje de login exitoso o erroneo*/
+        function showAlert(message, type) {
+            const alertBox = document.createElement("div");
+            alertBox.className = `custom-alert ${type}`;
+            alertBox.innerText = message;
+
+            document.body.appendChild(alertBox);
+
+            setTimeout(() => {
+                alertBox.classList.add("show");
+            }, 10);
+
+            setTimeout(() => {
+                alertBox.classList.remove("show");
+                setTimeout(() => alertBox.remove(), 300);
+            }, 3000);
         }
     </script>
 </head>

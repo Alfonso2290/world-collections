@@ -2,6 +2,79 @@
 <head>
     <!-- CSS de DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <style>
+        input[type="search"] {
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 10px;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+
+        input[type="search"]:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 4px rgba(0,123,255,0.4);
+        }
+
+        button {
+            padding: 6px 12px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:nth-of-type(2) {
+            background-color: #28a745;
+        }
+
+        button:nth-of-type(2):hover {
+            background-color: #1e7e34;
+        }
+
+        /* 🔥 ESTE ES EL FIX IMPORTANTE */
+        input[type="button"] {
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            min-width: 90px;
+            transition: all 0.2s ease;
+        }
+
+        input[type="button"]:hover {
+            transform: scale(1.05);
+        }
+
+        /* 🎯 Colores específicos */
+        input[type="button"][value="Agregar"] {
+            background-color: #28a745;
+        }
+
+        input[type="button"][value="Agregar"]:hover {
+            background-color: #1e7e34;
+        }
+
+        input[type="button"][value="Modificar"] {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        input[type="button"][value="Modificar"]:hover {
+            background-color: #e0a800;
+        }
+    </style>
 </head>
 <body>
     <center>

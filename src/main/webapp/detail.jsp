@@ -5,6 +5,73 @@
 
 <html>
 <head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+        }
+
+        h1 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        td {
+            padding: 6px;
+            text-align: center;
+            font-size: 13px;
+            border: 1px solid #ddd;
+        }
+
+        /* 🔹 tabla principal */
+        #t1 td {
+            min-width: 35px;
+            height: 35px;
+            font-weight: bold;
+        }
+
+        /* 🔹 efecto hover en celdas */
+        #t1 td:hover {
+            transform: scale(1.1);
+            cursor: pointer;
+        }
+
+        /* 🔹 leyenda */
+        #t2 {
+            margin-top: 10px;
+        }
+
+        #t2 td {
+            padding: 6px 10px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        /* 🔹 título tipo (donde usas colspan) */
+        td[colspan="10"] {
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+        h1 {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            background-color: white;
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border-left: 5px solid #007bff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+    </style>
     <script>
         let ArrayStatus = [];
 
@@ -73,7 +140,7 @@
 
             // Crear la celda
             const td = document.createElement("td");
-            if(item.status==='S') td.style.backgroundColor = "rgb(39, 245, 111)"; //Yala
+            if(item.status==='S') td.style.backgroundColor = "#4CAF50"; //Yala
             if(item.status==='N') td.style.backgroundColor = "rgb(245, 66, 39)"; //Nola
             if(item.status==='A') td.style.backgroundColor = "rgb(245, 166, 39)"; //Falta agregar
             if(item.status==='M') td.style.backgroundColor = "rgb(242, 245, 39)"; //Mejora

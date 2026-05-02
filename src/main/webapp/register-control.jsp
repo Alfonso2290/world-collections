@@ -5,6 +5,116 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+        }
+
+        /* 🔹 TABLAS GENERALES */
+        table {
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 5px auto;
+        }
+
+        td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            font-size: 13px;
+        }
+
+        /* 🔹 GRID PRINCIPAL (numeración) */
+        #container-list-numbers-collection td {
+            min-width: 35px;
+            height: 35px;
+            text-align: center;
+            font-weight: bold;
+            transition: transform 0.15s;
+        }
+
+        #container-list-numbers-collection td:hover {
+            transform: scale(1.1);
+            cursor: pointer;
+        }
+
+        /* 🔹 INPUTS */
+        input[type="text"] {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 4px rgba(0,123,255,0.4);
+        }
+
+        /* 🔹 SELECT */
+        select {
+            width: 100%;
+            padding: 6px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 4px rgba(0,123,255,0.4);
+        }
+
+        /* 🔹 BOTONES */
+        button {
+            padding: 7px 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* 🔹 BOTONES IMPORTANTES (automático por posición) */
+        button:nth-of-type(2) {
+            background-color: #28a745;
+        }
+
+        button:nth-of-type(2):hover {
+            background-color: #1e7e34;
+        }
+
+        /* 🔹 SECCIONES DINÁMICAS */
+        #container-add-news-items-collections,
+        #container-selection-type-collection,
+        #container-selection-numbers-type-collection {
+            margin-top: 10px;
+        }
+
+        /* 🔹 BLOQUES DINÁMICOS (divs) */
+        #container-confirmation-numbers-selection,
+        #container-selection-color,
+        #container-add-table-additional {
+            margin-top: 10px;
+        }
+
+        /* 🔹 TABLA DE COLORES (cuando aparece dinámicamente) */
+        #container-selection-color table td {
+            text-align: center;
+        }
+
+    </style>
     <script>
 
         /**

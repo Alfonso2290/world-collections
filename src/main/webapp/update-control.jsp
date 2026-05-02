@@ -5,6 +5,111 @@
 
 <html>
 <head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+        }
+
+        /* 🔹 TITLE */
+        h1 {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            background-color: white;
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border-left: 5px solid #007bff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            letter-spacing: 1px;
+        }
+
+        /* 🔹 TABLAS */
+        table {
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        td {
+            padding: 6px;
+            text-align: center;
+            font-size: 13px;
+            border: 1px solid #ddd;
+        }
+
+        /* 🔹 GRID DE FIGURAS */
+        #t1 td {
+            min-width: 35px;
+            height: 35px;
+            font-weight: bold;
+        }
+
+        #t1 td:hover {
+            transform: scale(1.1);
+            cursor: pointer;
+        }
+
+        /* 🔹 FORM MODIFICAR */
+        #t3 {
+            margin-top: 10px;
+        }
+
+        #t3 td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* inputs */
+        #t3 input, #t3 select {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        #t3 input:focus, #t3 select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 4px rgba(0,123,255,0.4);
+        }
+
+        /* botón modificar */
+        #t3 button {
+            padding: 8px 16px;
+            background-color: #ffc107;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #t3 button:hover {
+            background-color: #e0a800;
+        }
+
+        /* 🔹 LEYENDA */
+        #t2 {
+            margin-top: 10px;
+        }
+
+        #t2 td {
+            padding: 6px 10px;
+            text-align: left;
+        }
+
+        /* 🔹 TITULOS DE SECCION (colspan dinámico) */
+        td[colspan="10"], td[colspan="2"] {
+            font-weight: bold;
+            text-align: center;
+            background-color: #2a27f5 !important;
+            color: white;
+            font-size: 14px;
+        }
+    </style>
     <script>
         let ArrayStatus = [];
 
