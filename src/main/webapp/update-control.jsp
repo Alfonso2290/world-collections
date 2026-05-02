@@ -11,11 +11,21 @@
             background-color: #f4f6f8;
         }
 
+        /* 🔹 TITLE */
         h1 {
-            font-size: 20px;
-            margin-bottom: 10px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            background-color: white;
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border-left: 5px solid #007bff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            letter-spacing: 1px;
         }
 
+        /* 🔹 TABLAS */
         table {
             border-collapse: collapse;
             background-color: white;
@@ -30,20 +40,58 @@
             border: 1px solid #ddd;
         }
 
-        /* 🔹 tabla principal */
+        /* 🔹 GRID DE FIGURAS */
         #t1 td {
             min-width: 35px;
             height: 35px;
             font-weight: bold;
         }
 
-        /* 🔹 efecto hover en celdas */
         #t1 td:hover {
             transform: scale(1.1);
             cursor: pointer;
         }
 
-        /* 🔹 leyenda */
+        /* 🔹 FORM MODIFICAR */
+        #t3 {
+            margin-top: 10px;
+        }
+
+        #t3 td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* inputs */
+        #t3 input, #t3 select {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        #t3 input:focus, #t3 select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 4px rgba(0,123,255,0.4);
+        }
+
+        /* botón modificar */
+        #t3 button {
+            padding: 8px 16px;
+            background-color: #ffc107;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #t3 button:hover {
+            background-color: #e0a800;
+        }
+
+        /* 🔹 LEYENDA */
         #t2 {
             margin-top: 10px;
         }
@@ -51,25 +99,15 @@
         #t2 td {
             padding: 6px 10px;
             text-align: left;
-            font-size: 13px;
         }
 
-        /* 🔹 título tipo (donde usas colspan) */
-        td[colspan="10"] {
-            font-size: 14px;
-            letter-spacing: 1px;
-        }
-        h1 {
-            font-size: 22px;
+        /* 🔹 TITULOS DE SECCION (colspan dinámico) */
+        td[colspan="10"], td[colspan="2"] {
             font-weight: bold;
-            color: #333;
-            background-color: white;
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 8px;
-            border-left: 5px solid #007bff;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            margin-bottom: 10px;
+            text-align: center;
+            background-color: #2a27f5 !important;
+            color: white;
+            font-size: 14px;
         }
     </style>
     <script>
@@ -85,7 +123,7 @@
 
             const result = await response.json();
 
-            const tbody = document.getElementById("collections-detail-body");
+            const tbody = document.getElementById("collections-update-body");
             tbody.innerHTML = ""; // limpiar tabla
 
             let index = 0;
@@ -117,6 +155,7 @@
             });
 
             legend();
+            buildTableStatusControl();
         }
 
         function buildTable(index,row,item,tbody,numeration){
@@ -140,7 +179,7 @@
 
             // Crear la celda
             const td = document.createElement("td");
-            if(item.status==='S') td.style.backgroundColor = "#4CAF50"; //Yala
+            if(item.status==='S') td.style.backgroundColor = "rgb(39, 245, 111)"; //Yala
             if(item.status==='N') td.style.backgroundColor = "rgb(245, 66, 39)"; //Nola
             if(item.status==='A') td.style.backgroundColor = "rgb(245, 166, 39)"; //Falta agregar
             if(item.status==='M') td.style.backgroundColor = "rgb(242, 245, 39)"; //Mejora
@@ -157,6 +196,89 @@
 
             // Retorna valores actualizados
             return { index, row };
+        }
+
+        function buildTableStatusControl(){
+
+            const tbody = document.getElementById("collections-control-status");
+            tbody.innerHTML = ""; // limpiar tabla
+
+            let row = document.createElement("tr");
+            const tdTitle = document.createElement("td");
+            tdTitle.textContent = 'Modificar Estado';
+            tdTitle.setAttribute("colspan", "2");
+            tdTitle.style.fontWeight = "bold";
+            tdTitle.style.textAlign = "center";
+            row.appendChild(tdTitle);
+            tbody.appendChild(row);
+
+            row = document.createElement("tr");
+            row.innerHTML = `
+                    <td>Estado:</td>
+                    <td><select id="statusControl"><option>Yala</option><option>Nola</option><option>Mejora</option><option>Pendiente Agregar</option></select></td>
+                `;
+            tbody.appendChild(row);
+
+            row = document.createElement("tr");
+            row.innerHTML = `
+                    <td>Figura:</td>
+                    <td><input id="figureControl"></input type="text" id="txtFigure"></td>
+                `;
+            tbody.appendChild(row);
+
+            row = document.createElement("tr");
+            row.innerHTML = `
+                    <td>Tipo (Opc):</td>
+                    <td><input id="typeControl"></input type="text" id="txtType"></td>
+                `;
+            tbody.appendChild(row);
+
+            row = document.createElement("tr");
+            row.innerHTML = `
+                    <td colspan="2"><center><button onclick="updateFigureControlCollection()">Modificar</button></center></td>
+                `;
+            tbody.appendChild(row);
+        }
+
+        async function updateFigureControlCollection(){
+
+            //event.preventDefault();
+            const collectionId = document.getElementById("collectionId").value;
+            const status = document.getElementById("statusControl").value;
+            const numeration = document.getElementById("figureControl").value;
+            let type = document.getElementById("typeControl").value;
+            const title = document.getElementById("titleId").value;
+
+            if(type==='') type = null;
+
+
+            let statusFinal='';
+            if(status==='Yala') statusFinal = "S"; //Yala
+            if(status==='Nola') statusFinal = "N"; //Nola
+            if(status==='Pendiente Agregar') statusFinal = "A"; //Falta agregar
+            if(status==='Mejora') statusFinal = "M"; //Mejora
+
+            const bodyElement = {
+                numeration,
+                status: statusFinal,
+                collectionId,
+                type
+            }
+
+            const response = await fetch(`http://localhost:8081/control/update/control-collections`,{
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(bodyElement)
+            });
+
+            if(response.ok){
+                window.location.href = "update-control.jsp?id=" + collectionId + "&title=" + title;
+            }else{
+                const text = await response.text(); // leer error del backend si existe
+                alert("Error del servidor (status " + response.status + "): " + text);
+            }
         }
 
         function legend(){
@@ -201,12 +323,20 @@
         <input type="hidden" value="<%=requestId%>" id="collectionId"/>
         <input type="hidden" value="<%=title%>" id="titleId"/>
         <br><br>
-        <h1><%=title%></h1>
+        <h1><%= title %></h1>
         <br><br>
         <table border="2" id="t1">
             <thead>
             </thead>
-            <tbody id="collections-detail-body">
+            <tbody id="collections-update-body">
+            <!-- Aquí se pintan las filas dinámicamente -->
+            </tbody>
+        </table>
+        <br><br>
+        <table border="2" id="t3">
+            <thead>
+            </thead>
+            <tbody id="collections-control-status">
             <!-- Aquí se pintan las filas dinámicamente -->
             </tbody>
         </table>

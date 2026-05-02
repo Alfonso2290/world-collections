@@ -1,6 +1,51 @@
 <html>
 <head>
     <title>Registo Coleccion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+        }
+
+        table {
+            border-collapse: collapse;
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        td {
+            padding: 8px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 4px rgba(0,123,255,0.4);
+        }
+
+        input[type="submit"] {
+            width: auto;
+            padding: 6px 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #1e7e34;
+        }
+    </style>
     <script>
         async function saveCollection(event){
             event.preventDefault(); // Evita que el formulario recargue la página
@@ -46,7 +91,7 @@
         }
 
         async function callRegister(data){
-            const response = await fetch(`http://localhost:30080/control/save/collections`,{
+            const response = await fetch(`http://localhost:8081/control/save/collections`,{
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -68,7 +113,7 @@
         <form name="formRegister" onsubmit="saveCollection(event)">
             <table border="2">
                 <tr>
-                    <td colspan="2" align="center">Registro de Coleccion</td>
+                    <td colspan="2" align="center"><b>Registro de Coleccion</b></td>
                 </tr>
                 <tr>
                     <td>Nombre de Coleccion</td>
@@ -101,7 +146,7 @@
                             <option selected>--Seleccionar--</option>
                             <option>Completo</option>
                             <option>Incompleto</option>
-                            <option>Solo mejora</option>
+                            <option>Solo Mejora</option>
                             <option>Pendiente apertura</option>
                         </select>
                     </td>
