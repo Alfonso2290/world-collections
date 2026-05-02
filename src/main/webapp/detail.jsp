@@ -1,5 +1,6 @@
 <%
     String requestId = request.getParameter("id"); //Recupera valor enviado desde hipervinculo de home.jsp (href)
+    String title = request.getParameter("title");
 %>
 
 <html>
@@ -131,6 +132,9 @@
 <body>
     <center>
         <input type="hidden" value="<%=requestId%>" id="collectionId"/>
+        <input type="hidden" value="<%=title%>" id="titleId"/>
+        <br><br>
+        <h1><%=title%></h1>
         <br><br>
         <table border="2" id="t1">
             <thead>

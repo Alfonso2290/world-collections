@@ -1,5 +1,6 @@
 <%
     String requestId = request.getParameter("id"); //Recupera valor enviado desde hipervinculo de home.jsp (href)
+    String title = request.getParameter("title");
 %>
 
 <html>
@@ -141,6 +142,7 @@
             const status = document.getElementById("statusControl").value;
             const numeration = document.getElementById("figureControl").value;
             let type = document.getElementById("typeControl").value;
+            const title = document.getElementById("titleId").value;
 
             if(type==='') type = null;
 
@@ -167,7 +169,7 @@
             });
 
             if(response.ok){
-                window.location.href = "update-control.jsp?id=" + collectionId;
+                window.location.href = "update-control.jsp?id=" + collectionId + "&title=" + title;
             }else{
                 const text = await response.text(); // leer error del backend si existe
                 alert("Error del servidor (status " + response.status + "): " + text);
@@ -214,6 +216,9 @@
 <body>
     <center>
         <input type="hidden" value="<%=requestId%>" id="collectionId"/>
+        <input type="hidden" value="<%=title%>" id="titleId"/>
+        <br><br>
+        <h1><%= title %></h1>
         <br><br>
         <table border="2" id="t1">
             <thead>

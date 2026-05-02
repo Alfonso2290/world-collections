@@ -24,9 +24,14 @@
 
             result.forEach(item => {
                 const row = document.createElement("tr");
+                const title = item.name.toString().toUpperCase().concat(' - ')
+                                .concat(item.type.toString().toUpperCase()).concat(' - ')
+                                .concat(item.editorial.toString().toUpperCase()).concat(' - ')
+                                .concat(item.origin.toString().toUpperCase()).concat(' - ')
+                                .concat(item.priority.toString());
 
                 row.innerHTML = `
-                    <td><a href='detail.jsp?id=${item.id}'>${item.name}</a></td>
+                    <td><a href='detail.jsp?id=${item.id}&title=${title}'>${item.name}</a></td>
                     <td>${item.type}</td>
                     <td>${item.editorial}</td>
                     <td>${item.origin}</td>
@@ -36,7 +41,7 @@
                     <td>${item.form}</td>
                     <td>${item.binder}</td>
                     <td><input type="button" value="Agregar" onclick="registerControlCollection(${item.id})"/></td>
-                    <td><input type="button" value="Modificar" onclick="updateControlCollection(${item.id})"/></td>
+                    <td><input type="button" value="Modificar" onclick="updateControlCollection(${item.id},'${title}')"/></td>
                 `;
 
                 tbody.appendChild(row);
@@ -51,8 +56,8 @@
             window.location.href = "register-control.jsp?id=" + id;
         }
 
-        function updateControlCollection(id){
-            window.location.href = "update-control.jsp?id=" + id;
+        function updateControlCollection(id, title){
+            window.location.href = "update-control.jsp?id=" + id + "&title=" + title;
         }
         window.onload = formListCollectionsFilterName; // ejecutar al cargar
     </script>
