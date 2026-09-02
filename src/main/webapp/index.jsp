@@ -114,26 +114,31 @@
                 setTimeout(() => alertBox.remove(), 300);
             }, 3000);
         }
+
+        function createAccount(){
+            window.location.href = "new-account.jsp";
+        }
     </script>
 </head>
 <body>
-    <form onsubmit="login(event)">
-        <table border="2" align="center">
-            <tr align="center">
-                <td colspan="2" height="30">Login</td>
-            </tr>
-            <tr>
-                <td width="120" height="30">User:</td>
-                <td width="150"><input type="text" id="user"/></td>
-            </tr>
-            <tr>
-                <td height="30">Password:</td>
-                <td><input type="password" id="password"/></td>
-            </tr>
-            <tr>
-                <td colspan="2" height="30"><center><button type="submit">Login</button></center></td>
-            </tr>
-        </table>
-    </form>
+    <table border="2" align="center">
+        <tr align="center">
+            <td colspan="2" height="30">Login</td>
+        </tr>
+        <tr>
+            <td width="120" height="30">User:</td>
+            <td width="150"><input type="text" id="user"/></td>
+        </tr>
+        <tr>
+            <td height="30">Password:</td>
+            <td><input type="password" id="password"/></td>
+        </tr>
+        <tr>
+            <td height="30"><center><button type="submit" onclick="login(event)">Login</button></center></td>
+            <td height="30"><center><button type="submit" onclick="createAccount(event)">Create Account</button></center></td>
+        </tr>
+    </table>
+
+
 </body>
 </html>
