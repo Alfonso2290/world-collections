@@ -11,11 +11,13 @@ RUN mvn -B -e clean package -DskipTests
 # ----- Etapa 2: Runtime (Tomcat) -----
 FROM tomcat:9.0-jdk17-corretto
 
-# Elimina la app por defecto (ROOT)
+# Elimina la aplicación ROOT por defecto de Tomcat
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Copia tu WAR a Tomcat
+# Copia el WAR generado a Tomcat
 COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
 
+# Tomcat escucha en 8080
 EXPOSE 8080
+
 CMD ["catalina.sh", "run"]
