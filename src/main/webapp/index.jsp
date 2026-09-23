@@ -82,8 +82,12 @@
 
             //Apunta al NodePort: 30080 (world-control-collection --> Service -> nodePort: 30080)
             // Ya no apunta a service NodePort, sino a service LoadBalancer el cual utiliza el puerto 8081
-            const response = await fetch(`http://localhost:8081/user/validate/user?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, {
-                method: "GET"
+            //const response = await fetch(`http://localhost:8081/user/validate/user?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, {
+            const response = await fetch(`http://world.local:8083/world-control-collections/user/validate/user?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer VVNFUi1ibGFuY2EtMTIz"
+                }
             });
 
             const result = await response.json();

@@ -99,8 +99,12 @@
                 return;
             }
 
-            const response = await fetch(`http://localhost:8081/user/save?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, {
-                method: "POST"
+            //const response = await fetch(`http://localhost:8081/user/save?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, {
+            const response = await fetch(`http://world.local:8083/world-control-collections/user/save?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer VVNFUi1ibGFuY2EtMTIz"
+                }
             });
 
             const result = await response.json();
