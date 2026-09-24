@@ -92,7 +92,7 @@
 
         async function callRegister(data){
             //const response = await fetch(`http://localhost:8081/control/save/collections`,{
-            const response = await fetch(`http://world.local:8083/world-control-collections/control/save/collections`,{
+            const response = await fetch(`http://world.local:8083/security/world-control-collections/control/save/collections`,{
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

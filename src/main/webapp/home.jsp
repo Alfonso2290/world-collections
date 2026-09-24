@@ -139,7 +139,7 @@
                     url = `?editorial=${editorial}`;
                 }
                 //const response = await fetch(`http://localhost:8081/control/collections${url}`, {
-                const response = await fetch(`http://world.local:8083/world-control-collections/control/collections${url}`, {
+                const response = await fetch(`http://world.local:8083/security/world-control-collections/control/collections${url}`, {
                     method: "GET",
                     headers: {
                         "Authorization": "Bearer VVNFUi1ibGFuY2EtMTIz"
