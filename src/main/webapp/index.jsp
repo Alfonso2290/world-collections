@@ -80,13 +80,33 @@
                 return;
             }
 
+            const data = {
+                username: user,
+                password:password
+            }
+
+            const responseToken = await fetch(`http://world.local:8082/token/generate`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!responseToken.ok) {
+                showAlert(responseToken.headers.get("Error"), "error");
+                return;
+            }
+
+            const resultToken = await responseToken.json();
+
             //Apunta al NodePort: 30080 (world-control-collection --> Service -> nodePort: 30080)
             // Ya no apunta a service NodePort, sino a service LoadBalancer el cual utiliza el puerto 8081
             //const response = await fetch(`http://localhost:8081/user/validate/user?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, {
             const response = await fetch(`http://world.local:8083/security/world-control-collections/user/validate/user?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, {
                 method: "GET",
                 headers: {
-                    "Authorization": "Bearer VVNFUi1ibGFuY2EtMTIz"
+                    "Authorization": "Bearer " + resultToken.access_token
                 }
             });
 
@@ -101,7 +121,6 @@
             }
         }
 
-        /**Mejora estilo de mensaje de login exitoso o erroneo*/
         function showAlert(message, type) {
             const alertBox = document.createElement("div");
             alertBox.className = `custom-alert ${type}`;
@@ -142,7 +161,5 @@
             <td height="30"><center><button type="submit" onclick="createAccount(event)">Create Account</button></center></td>
         </tr>
     </table>
-
-
 </body>
 </html>
