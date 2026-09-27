@@ -138,11 +138,13 @@
                 }else if(editorial.length!==0){
                     url = `?editorial=${editorial}`;
                 }
+
+                const token = sessionStorage.getItem("access_token");
                 //const response = await fetch(`http://localhost:8081/control/collections${url}`, {
                 const response = await fetch(`http://world.local:8083/security/world-control-collections/control/collections${url}`, {
                     method: "GET",
                     headers: {
-                        "Authorization": "Bearer VVNFUi1ibGFuY2EtMTIz"
+                        "Authorization": `Bearer ${token}`
                     }
                 });
 

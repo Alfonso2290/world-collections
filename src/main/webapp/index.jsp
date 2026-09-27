@@ -99,6 +99,8 @@
             }
 
             const resultToken = await responseToken.json();
+            sessionStorage.setItem("access_token", resultToken.access_token);
+            const token = resultToken.access_token
 
             //Apunta al NodePort: 30080 (world-control-collection --> Service -> nodePort: 30080)
             // Ya no apunta a service NodePort, sino a service LoadBalancer el cual utiliza el puerto 8081
@@ -106,7 +108,7 @@
             const response = await fetch(`http://world.local:8083/security/world-control-collections/user/validate/user?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, {
                 method: "GET",
                 headers: {
-                    "Authorization": "Bearer " + resultToken.access_token
+                    "Authorization": `Bearer ${token}`
                 }
             });
 

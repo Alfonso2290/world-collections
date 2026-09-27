@@ -79,11 +79,13 @@
             event.preventDefault();
             const id = document.getElementById("collectionId").value;
 
+            const token = sessionStorage.getItem("access_token");
+
             //const response = await fetch(`http://localhost:8081/control/collections-detail?collectionId=${id}`, {
             const response = await fetch(`http://world.local:8083/security/world-control-collections/control/collections-detail?collectionId=${id}`, {
                 method: "GET",
                 headers: {
-                    "Authorization": "Bearer VVNFUi1ibGFuY2EtMTIz"
+                    "Authorization": `Bearer ${token}`
                 }
             });
 

@@ -432,12 +432,13 @@
                 data.push(bodyElement);
             });
 
+            const token = sessionStorage.getItem("access_token");
             //const response = await fetch(`http://localhost:8081/control/save/control-collections`,{
             const response = await fetch(`http://world.local:8083/security/world-control-collections/control/save/control-collections`,{
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer VVNFUi1ibGFuY2EtMTIz"
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify(data)
             });

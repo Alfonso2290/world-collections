@@ -117,11 +117,12 @@
             event.preventDefault();
             const id = document.getElementById("collectionId").value;
 
+            const token = sessionStorage.getItem("access_token");
             //const response = await fetch(`http://localhost:8081/control/collections-detail?collectionId=${id}`, {
             const response = await fetch(`http://world.local:8083/security/world-control-collections/control/collections-detail?collectionId=${id}`, {
                 method: "GET",
                 headers: {
-                    "Authorization": "Bearer VVNFUi1ibGFuY2EtMTIz"
+                    "Authorization": `Bearer ${token}`
                 }
             });
 
@@ -269,12 +270,13 @@
                 type
             }
 
+            const token = sessionStorage.getItem("access_token");
             //const response = await fetch(`http://localhost:8081/control/update/control-collections`,{
             const response = await fetch(`http://world.local:8083/security/world-control-collections/control/update/control-collections`,{
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer VVNFUi1ibGFuY2EtMTIz"
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify(bodyElement)
             });

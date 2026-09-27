@@ -99,11 +99,12 @@
                 return;
             }
 
+            const token = sessionStorage.getItem("access_token");
             //const response = await fetch(`http://localhost:8081/user/save?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, {
             const response = await fetch(`http://world.local:8083/security/world-control-collections/user/save?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, {
                 method: "POST",
                 headers: {
-                    "Authorization": "Bearer VVNFUi1ibGFuY2EtMTIz"
+                    "Authorization": `Bearer ${token}`
                 }
             });
 
